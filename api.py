@@ -8,19 +8,19 @@ class TrojanServer(object):
     def __init__(self, server, port) -> None:
         self.server = server
         self.port = port
-        self.stub = self.createStub()
+        self.stub = self.generate_stub()
 
-    def createStub(self):
+    def generate_stub(self):
         channel = grpc.insecure_channel(self.server + ':' + str(self.port))
         stub = api_pb2_grpc.TrojanServerServiceStub(channel)
         return stub
 
-    def listUsers(self):
+    def list_users(self):
         users = self.stub.ListUsers(api_pb2.ListUsersRequest())
         users = [user.status for user in users]
         return users
 
-    def addUsers(self, users):
+    def add_users(self, users):
         reqs = []
         for user in users:
             if hasattr(user.user, 'password'):
@@ -35,7 +35,7 @@ class TrojanServer(object):
         for i in res:
             print(i)
 
-    def deleteUsers(self, users):
+    def delete_users(self, users):
         reqs = []
         for user in users:
             if hasattr(user.user, 'password'):
@@ -51,7 +51,7 @@ class TrojanServer(object):
         for i in res:
             print(i)
 
-    def modifyUsers(self, users):
+    def modify_users(self, users):
         reqs = []
         for user in users:
             if hasattr(user.user, 'password'):
@@ -68,7 +68,7 @@ class TrojanServer(object):
             print(i)
 
 
-def generateUser(password, hash='', upload_traffic=0, download_traffic=0, upload_speed_limit=39321600, download_speed_limit=39321600, ip_limit=4):
+def generate_user(password, hash='', upload_traffic=0, download_traffic=0, upload_speed_limit=39321600, download_speed_limit=39321600, ip_limit=4):
     user = api_pb2.UserStatus(
         user=api_pb2.User(
             password=password,
