@@ -51,6 +51,22 @@ class TrojanServer(object):
         for i in res:
             print(i)
 
+    def modifyUsers(self, users):
+        reqs = []
+        for user in users:
+            if hasattr(user.user, 'password'):
+                print(f'Modifying user({user.user.password})')
+            elif hasattr(user.user, 'hash'):
+                print(f'Modifying user({user.user.hash})')
+            else:
+                print(
+                    f'Modifying user({user.user.password} - {user.user.hash})')
+            reqs.append(api_pb2.SetUsersRequest(status=user,
+                        operation=api_pb2.SetUsersRequest.Operation.Modify))
+        res = self.stub.SetUsers(iter(reqs))
+        for i in res:
+            print(i)
+
 
 def generateUser(password, hash='', upload_speed_limit=39321600, download_speed_limit=39321600, ip_limit=4):
     user = api_pb2.UserStatus(
